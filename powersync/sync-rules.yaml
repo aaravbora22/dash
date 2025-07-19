@@ -1,11 +1,15 @@
+# Define sync rules to control which data is synced to each user
+# See the docs: https://docs.powersync.com/usage/sync-rules
 bucket_definitions:
   global:
     data:
-      - categories
-      - shops
-  by_user:
-    parameters: SELECT request.user_id() AS user_id
+      # Sync all rows
+      - SELECT * FROM mytable
+      # Only sync some rows
+      - SELECT * FROM mytable WHERE mycolumn = false
+  by_user: 
+    # Only sync rows belonging to the user
+    parameters: SELECT request.user_id() as user_id
     data:
-      - jewelry_items
-      - metals
-      - pricing_details
+    - SELECT * FROM mytable WHERE mytable.user_id = bucket.user_id
+  
